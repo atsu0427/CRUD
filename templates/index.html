@@ -1,0 +1,32 @@
+{% extends "application.html" %}
+{% block content %}
+<header>
+    <h1>geektwitter</h1>
+</header>
+<div class="search">
+       <form>
+            <input type="text" name="search">
+            <input type="submit" value="検索">
+        </form>
+</div>
+    <h1>投稿一覧</h1>
+    <a href="/login">ログイン</a>
+    <a href="/new">ツイートする</a>
+    <a href="/logout">ログアウト</a>
+    <div class="container">
+        <div class="row">
+            {% for tweet in tweets %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ tweet.title }}</h5>
+                        <p class="card-text">{{ tweet.body }}</p>
+                        <a href="{{ tweet.id }}/edit" class="btn btn-primary">編集</a>
+                        <a href="{{ tweet.id }}/delete" class="btn btn-danger">削除</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'application.html' %}
+{% block content %}
+
+    <div class="form-container">
+        <h1>ユーザ登録</h1>
+        <form method="POST">
+            <label for="">ユーザ名</label>
+            <input type="text" name="username">
+            <label for="">パスワード</label>
+            <input type="password" name="password">
+            <button type="submit">登録</button>
+        </form>
+        <div class="action">
+         <a href="/login">戻る</a>
+        </div>
+    </div>
+
+{% endblock %}

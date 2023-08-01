@@ -1,0 +1,26 @@
+{% extends 'application.html' %}
+{% block content %}
+    
+    <div class="container"></div>
+        <div class="form-container">
+            <div class="img">
+                <img src="{{ url_for('static', filename='img/twitterロゴ.png') }}" alt="twitter">
+            </div>
+            <h3>Twitterにログイン</h3>
+            <form action="/login" method="POST">
+                <label for="username"></label>
+                <input type="text" id="username" placeholder="メールアドレス" name="username" class="TextBoxCustomFocusBorder" required>
+                <br>
+                <label for="password"></label>
+                <input type="password" id="password" placeholder="パスワード" name="password" class="TextBoxCustomFocusBorder" required>
+                <br>
+                <button type="submit">ログイン</button>
+            </form>
+            <ul>
+                <li><p><a href="/reset_password">パスワードをお忘れですか？</a></p></li>
+                <li><p><a href="/signup">アカウント作成</a></p></li>
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}
