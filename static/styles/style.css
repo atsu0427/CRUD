@@ -2,6 +2,10 @@ h3 {
     text-align: center;
 }
 
+h2 {
+    text-align: center;
+}
+
 p {
     margin-top: 3%;
 }
@@ -13,11 +17,12 @@ a {
 a:hover{
     color: #0d8bd8;
 }
+
 body {
     background-color: #f5f8fa;
     font-family: Arial, sans-serif;
-    
 }
+
 .TextBoxCustomFocusBorder:focus {
     outline:solid 2px #1da1f2;
 }
@@ -30,26 +35,6 @@ input:focus {
 }
 
 
-.container {
-    margin-right: 30cm;
-    display: flex;
-    justify-content: center;
-    align-items: center;    
-}
-
-.row{
-    margin-left: 20%;
-}
-
-.form-container {
-    margin-top: 10%;
-    margin-left: 32%;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 500px;
-}
 
 ul {
     display: inline-block;
@@ -58,7 +43,6 @@ ul {
   
 ul li {
     display: inline-block;
-    margin-left: 1em;
 }
 
 .img {
@@ -67,6 +51,7 @@ ul li {
 }
 h1 {
     text-align: center;
+    color: #f5f8fa;
 }
 
 form {

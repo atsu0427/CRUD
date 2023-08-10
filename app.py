@@ -1,10 +1,11 @@
-from flask import Flask, redirect, render_template, request
+from flask import Flask, redirect, render_template, request, session, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
 import os
 import uuid
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -14,16 +15,15 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), nullable=False, unique=True)
+    password = db.Column(db.String(100))
+
 class Tweet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), nullable=False)
     body = db.Column(db.String(140), nullable=False)
-
-
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False, unique=True)
-    password = db.Column(db.String(25))
 
 def create_user_table():
     with app.app_context():
@@ -46,14 +46,16 @@ def index():
     return render_template('/index.html', tweets=tweets)
 
 @app.route('/new',methods=['GET','POST'])
+@login_required
 def create():
+    
     if request.method == 'POST':
         # POSTメソッドの時の処理。
         title = request.form.get('title')
         body = request.form.get('body')
-        tweet = Tweet(title=title,body=body)
+        tweets = Tweet(title=title,body=body)
         # DBに値を送り保存する
-        db.session.add(tweet)
+        db.session.add(tweets)
         db.session.commit()
         return redirect('/')
     else:
@@ -61,8 +63,11 @@ def create():
         return render_template('/new.html')
 
 @app.route('/<int:id>/edit',methods=['GET','POST'])
+@login_required
 def update(id):
+    
     tweets = Tweet.query.get(id)
+    
     if request.method == 'GET':
         return render_template('/edit.html',tweet=tweets)
     else:
@@ -76,7 +81,6 @@ def delete(id):
     tweets = Tweet.query.get(id)
 
     db.session.delete(tweets)
-
     db.session.commit()
     return redirect('/')
 
@@ -89,7 +93,7 @@ def signup():
          user = User(username=username, password=generate_password_hash(password, method='sha256'))
          db.session.add(user)
          db.session.commit()
-         return redirect('login')
+         return redirect('/login')
      else:
          return render_template('signup.html')
 
@@ -105,7 +109,7 @@ def login():
              return redirect('/')
          else:
             # ユーザーが存在しないか、パスワードが一致しない場合の処理
-            return render_template('login.html', error="無効なユーザー名またはパスワードです")
+            return render_template('index.html', error="無効なユーザー名またはパスワードです")
      else:
          return render_template('login.html')
 
@@ -153,7 +157,6 @@ def reset_password_form(token):
     # トークンが無効な場合、エラーメッセージを表示
     error_message = '無効なトークンです。'
     return render_template('password_reset_error.html', error_message=error_message)
-
 
 
 @app.route('/logout')
