@@ -24,6 +24,8 @@ class Tweet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), nullable=False)
     body = db.Column(db.String(140), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User',backref=db.backref('tweet', lazy=True))
 
 def create_user_table():
     with app.app_context():
@@ -42,7 +44,7 @@ def index():
     if text_input is None or len(text_input) == 0:
         tweets = Tweet.query.all()
     else:
-        tweets = db.session.query(Tweet).filter(or_(Tweet.body.like(text_input), Tweet.title.like(text_input))).all()
+        tweets = db.session.query(Tweet).filter(or_(Tweet.body.contains(text_input), Tweet.title.contains(text_input))).all()
     return render_template('/index.html', tweets=tweets)
 
 @app.route('/new',methods=['GET','POST'])
@@ -67,7 +69,10 @@ def create():
 def update(id):
     
     tweets = Tweet.query.get(id)
-    
+
+    if current_user != Tweet.user_id:
+        return "You don't have permission to edit this post."
+
     if request.method == 'GET':
         return render_template('/edit.html',tweet=tweets)
     else:
