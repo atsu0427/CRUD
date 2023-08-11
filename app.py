@@ -69,9 +69,10 @@ def create():
 def update(id):
     
     tweets = Tweet.query.get(id)
+    user_id = Tweet.user_id
 
-    if current_user != Tweet.user_id:
-        return "You don't have permission to edit this post."
+    if current_user.id != user_id:
+        return redirect('/')
 
     if request.method == 'GET':
         return render_template('/edit.html',tweet=tweets)

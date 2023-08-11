@@ -22,6 +22,8 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ tweet.title }}</h5>
                             <p class="card-text">{{ tweet.body }}</p>
+                            <p class="card-text">user_id={{ tweet.user_id }}</p>
+                            <p class="card-text">current_user.id={{ current_user.id }}</p>
                             <a href="{{ tweet.id }}/edit" class="btn btn-primary">編集</a>
                             <a href="{{ tweet.id }}/delete" class="btn btn-danger">削除</a>
                             
