@@ -55,7 +55,8 @@ def create():
         # POSTメソッドの時の処理。
         title = request.form.get('title')
         body = request.form.get('body')
-        tweets = Tweet(title=title,body=body)
+        user_id = current_user.id
+        tweets = Tweet(title=title,body=body,user_id=user_id)
         # DBに値を送り保存する
         db.session.add(tweets)
         db.session.commit()
@@ -69,26 +70,29 @@ def create():
 def update(id):
     
     tweets = Tweet.query.get(id)
-    user_id = Tweet.user_id
 
-    if current_user.id != user_id:
-        return redirect('/')
+    if current_user.id == tweets.user_id:
 
-    if request.method == 'GET':
-        return render_template('/edit.html',tweet=tweets)
+        if request.method == 'GET':
+            return render_template('/edit.html',tweet=tweets)
+        else:
+            tweets.title = request.form.get('title')
+            tweets.body = request.form.get('body')
+            db.session.commit()
+            return redirect('/')
     else:
-        tweets.title = request.form.get('title')
-        tweets.body = request.form.get('body')
-        db.session.commit()
-        return redirect('/')
+        return "You don't have permission to edit this post."
     
 @app.route('/<int:id>/delete',methods=['GET'])
+@login_required
 def delete(id):
     tweets = Tweet.query.get(id)
-
-    db.session.delete(tweets)
-    db.session.commit()
-    return redirect('/')
+    if current_user.id == tweets.user_id:
+        db.session.delete(tweets)
+        db.session.commit()
+        return redirect('/')
+    else:
+        return "You don't have permission to delete this post."
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():

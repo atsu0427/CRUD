@@ -8,6 +8,7 @@ p {
 
 a {
     color: #1da1f2;
+    text-decoration: none;
 }
 
 a:hover{
@@ -76,4 +77,8 @@ button {
 
 button:hover {
     background-color: #0d8bd8;
+}
+
+.tag {
+    margin-left: 3%;
 }
